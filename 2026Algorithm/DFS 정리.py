@@ -14,7 +14,14 @@ def dfs(graph, v, visited):
 
 # 사용 예시
 n = 5   # 노드 개수
-graph = [[] for _ in range(n)]
+graph = [
+    [],
+    [2, 3],
+    [1, 4],
+    [1, 5],
+    [2],
+    [3]
+]
 
 # graph = [
 #     [],         # 0번은 안 쓰는 경우
@@ -73,8 +80,8 @@ def dfs(x, y, maps, visited, n, m):
     visited[x][y] = True
 
     # 상 하 좌 우
-    dx = [-1, -1, 0, 0]
-    dy = [0, 0, -1, -1]
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
 
     for i in range(4):
         nx = x + dx[i]
@@ -108,6 +115,26 @@ for i in range(n):
             count += 1
 
 print(count)
+
+# ---------------------------------------------------------
+
+# 8방향 DFS
+# 대각선까지 연결된 영역 개수를 셀 때 사용
+def dfs_8dir(x, y, maps, visited, n, m):
+    visited[x][y] = True
+
+    dx = [-1, -1, -1, 0, 0, 1, 1, 1]
+    dy = [-1, 0, 1, -1, 1, -1, 0, 1]
+
+    for i in range(8):
+        nx = x + dx[i]
+        ny = y + dy[i]
+
+        if nx < 0 or nx >= n or ny < 0 or ny >= m:
+            continue
+
+        if maps[nx][ny] == 1 and not visited[nx][ny]:
+            dfs_8dir(nx, ny, maps, visited, n, m)
 
 # ---------------------------------------------------------
 
@@ -154,7 +181,49 @@ def solution(n, computers):
             dfs(computers, visited, i)
             answer += 1
 
-        return answer
+    return answer
+
+# ---------------------------------------------------------
+
+# 트리 DFS 템플릿
+# 부모, 깊이, 서브트리 크기를 한 번에 구할 때 사용
+def tree_dfs(node, parent, tree, depth, parents, subtree_size):
+    parents[node] = parent
+    subtree_size[node] = 1
+
+    for next_v in tree[node]:
+        if next_v == parent:
+            continue
+
+        depth[next_v] = depth[node] + 1
+        tree_dfs(next_v, node, tree, depth, parents, subtree_size)
+        subtree_size[node] += subtree_size[next_v]
+
+# ---------------------------------------------------------
+
+# 사이클 감지 DFS
+# 방향 그래프에서 순환 여부를 확인할 때 사용
+def has_cycle_directed(n, graph):
+    state = [0] * (n + 1)
+
+    def dfs_cycle(node):
+        state[node] = 1  # 현재 재귀 스택에 들어와 있는 상태
+
+        for next_v in graph[node]:
+            if state[next_v] == 1:
+                return True
+
+            if state[next_v] == 0 and dfs_cycle(next_v):
+                return True
+
+        state[node] = 2  # 탐색이 완전히 끝난 상태
+        return False
+
+    for i in range(1, n + 1):
+        if state[i] == 0 and dfs_cycle(i):
+            return True
+
+    return False
 
 # ---------------------------------------------------------
 
@@ -181,6 +250,37 @@ def dfs(depth, path, used, arr):
 arr = [1, 2, 3]
 used = [False] * len(arr)
 dfs(0, [], used, arr)
+
+# ---------------------------------------------------------
+
+# 조합형 DFS 템플릿
+# n개 중 r개 선택처럼 시작 인덱스를 넘기며 고르는 문제
+def combination_dfs(arr, start, r, path):
+    if len(path) == r:
+        print(path[:])
+        return
+
+    for i in range(start, len(arr)):
+        path.append(arr[i])
+        combination_dfs(arr, i + 1, r, path)
+        path.pop()
+
+# ---------------------------------------------------------
+
+# 부분집합 DFS 템플릿
+# 원소를 넣을지 말지를 재귀적으로 결정하는 문제
+def subset_dfs(arr, idx, path):
+    if idx == len(arr):
+        print(path[:])
+        return
+
+    # 현재 원소를 선택하는 경우
+    path.append(arr[idx])
+    subset_dfs(arr, idx + 1, path)
+    path.pop()
+
+    # 현재 원소를 선택하지 않는 경우
+    subset_dfs(arr, idx + 1, path)
 
 
 

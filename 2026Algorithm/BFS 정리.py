@@ -18,8 +18,8 @@ def bfs(graph, start, n):
                 visited[next_v] = True
                 queue.append(next_v)
 
-        # 방문 가능 여부만 확인하는 기본형 예시라 visited를 바로 반환한다.
-        return visited
+    # 큐가 모두 빌 때까지 탐색을 마치고 방문 결과를 반환한다.
+    return visited
 
 # 사용 예시
 n = 5
@@ -68,6 +68,40 @@ graph = [
 
 dist = bfs_distance(graph, 1, n)
 print(dist)  # 1번 노드에서 각 노드까지 거리
+
+# ---------------------------------------------------------
+
+# 그래프 BFS - 경로 복원
+# 최단 거리뿐 아니라 실제 이동 경로까지 필요한 문제
+def bfs_restore_path(graph, start, target, n):
+    parent = [-1] * (n + 1)
+    dist = [-1] * (n + 1)
+    queue = deque([start])
+    dist[start] = 0
+
+    while queue:
+        now = queue.popleft()
+
+        if now == target:
+            break
+
+        for next_v in graph[now]:
+            if dist[next_v] == -1:
+                dist[next_v] = dist[now] + 1
+                parent[next_v] = now
+                queue.append(next_v)
+
+    if dist[target] == -1:
+        return []
+
+    # parent 배열을 거꾸로 따라가면 최단 경로를 복원할 수 있다.
+    path = []
+    current = target
+    while current != -1:
+        path.append(current)
+        current = parent[current]
+
+    return path[::-1]
 
 # ---------------------------------------------------------
 
@@ -127,6 +161,41 @@ print(dist[n - 1][m - 1])
 
 # ---------------------------------------------------------
 
+# 멀티 소스 BFS
+# 여러 시작점에서 동시에 퍼지는 문제: 토마토, 불 번짐, 전염 확산
+def multi_source_bfs(maps, starts):
+    n = len(maps)
+    m = len(maps[0])
+    dist = [[-1] * m for _ in range(n)]
+    queue = deque()
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+
+    for x, y in starts:
+        dist[x][y] = 0
+        queue.append((x, y))
+
+    while queue:
+        x, y = queue.popleft()
+
+        for i in range(4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            if nx < 0 or nx >= n or ny < 0 or ny >= m:
+                continue
+
+            if maps[nx][ny] == 0:
+                continue
+
+            if dist[nx][ny] == -1:
+                dist[nx][ny] = dist[x][y] + 1
+                queue.append((nx, ny))
+
+    return dist
+
+# ---------------------------------------------------------
+
 # 8방향 탐색 템플릿
 # 대각선 포함, 섬 문제, 그림 문제, 지뢰찾기류
 def bfs_8dir(start_x, start_y, maps, visited):
@@ -145,7 +214,7 @@ def bfs_8dir(start_x, start_y, maps, visited):
 
         # 대각선을 포함한 8방향 칸을 모두 확인한다.
         for i in range(8):
-            nx = x + dy[i]
+            nx = x + dx[i]
             ny = y + dy[i]
 
             if nx < 0 or nx >= n or ny < 0 or ny >= m:
@@ -226,6 +295,35 @@ def bfs():
             if not visited[nx][ny][new_state]:
                 visited[nx][ny][new_state] = True
                 queue.append((nx, ny, new_state))
+
+# ---------------------------------------------------------
+
+# 0-1 BFS
+# 간선 가중치가 0 또는 1인 최단 거리 문제
+def zero_one_bfs(graph, start, n):
+    INF = 10 ** 18
+    dist = [INF] * (n + 1)
+    queue = deque([start])
+    dist[start] = 0
+
+    while queue:
+        now = queue.popleft()
+
+        for next_v, cost in graph[now]:
+            new_cost = dist[now] + cost
+
+            if new_cost >= dist[next_v]:
+                continue
+
+            dist[next_v] = new_cost
+
+            # 비용이 0이면 앞에 넣어 먼저 처리하고, 1이면 뒤에 넣는다.
+            if cost == 0:
+                queue.appendleft(next_v)
+            else:
+                queue.append(next_v)
+
+    return dist
 
 # ---------------------------------------------------------
 # 게임 맵 최단거리

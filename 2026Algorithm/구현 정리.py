@@ -17,8 +17,10 @@ dy8 = [-1, 0, 1, -1, 1, -1, 0, 1]
 # 0 = 북, 1 = 동, 2 = 남, 3 = 서
 dir4 = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
-# 거리 계산
-# abs(x1 - x2) + abs(y1 - y2)
+# 맨해튼 거리 계산
+def manhattan_distance(x1, y1, x2, y2):
+    """격자에서 상하좌우 이동 기준 거리"""
+    return abs(x1 - x2) + abs(y1 - y2)
 
 # ---------------------------------------------------------
 # 2. 범위 체크 함수
@@ -89,6 +91,11 @@ def rotate_90_counter_clockwise(matrix):
     return [list(row) for row in zip(*matrix)][::-1]
 
 
+def transpose_board(board):
+    """2차원 배열의 행과 열을 뒤집는다"""
+    return [list(row) for row in zip(*board)]
+
+
 # ---------------------------------------------------------
 # 5. 누적합
 # ---------------------------------------------------------
@@ -108,6 +115,39 @@ def range_sum(prefix, left, right):
     누적합 배열이 있을 때 arr[left:right+1]의 합 반환
     """
     return prefix[right + 1] - prefix[left]
+
+
+def build_2d_prefix_sum(board):
+    """
+    2차원 누적합 생성
+    prefix[x][y]는 (0,0)부터 (x-1,y-1)까지의 합
+    """
+    n = len(board)
+    m = len(board[0]) if n > 0 else 0
+    prefix = [[0] * (m + 1) for _ in range(n + 1)]
+
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            prefix[i][j] = (
+                board[i - 1][j - 1]
+                + prefix[i - 1][j]
+                + prefix[i][j - 1]
+                - prefix[i - 1][j - 1]
+            )
+
+    return prefix
+
+
+def range_sum_2d(prefix, x1, y1, x2, y2):
+    """
+    2차원 누적합으로 (x1,y1)부터 (x2,y2)까지 합을 구한다
+    """
+    return (
+        prefix[x2 + 1][y2 + 1]
+        - prefix[x1][y2 + 1]
+        - prefix[x2 + 1][y1]
+        + prefix[x1][y1]
+    )
 
 
 # ---------------------------------------------------------
@@ -366,6 +406,12 @@ def copy_board(board):
     return [row[:] for row in board]
 
 
+def compress_coordinates(values):
+    """좌표 압축 결과를 딕셔너리로 반환"""
+    sorted_unique = sorted(set(values))
+    return {value: idx for idx, value in enumerate(sorted_unique)}
+
+
 # ---------------------------------------------------------
 # 11. 테스트용 실행
 # ---------------------------------------------------------
@@ -377,3 +423,9 @@ if __name__ == "__main__":
     ]
 
     print(solution(sample_board))
+    print("맨해튼 거리:", manhattan_distance(0, 0, 2, 3))
+    print("전치:", transpose_board(sample_board))
+
+    prefix_2d = build_2d_prefix_sum(sample_board)
+    print("2차원 누적합 구간합:", range_sum_2d(prefix_2d, 0, 0, 1, 1))
+    print("좌표 압축:", compress_coordinates([50, 10, 50, 20]))
