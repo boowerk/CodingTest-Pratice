@@ -2,6 +2,7 @@ import sys
 sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
+# 비트마스크로 사용한 알파벳 집합을 관리하는 DFS 풀이
 R, C = map(int, input().split())
 board = [input().strip() for _ in range(R)]
 
@@ -22,6 +23,7 @@ def dfs(x, y, mask, depth):
             sys.exit(0)
 
     idx = x * C + y
+    # 같은 칸에 같은 mask로 다시 왔다면 이후 탐색 결과도 같으므로 중단한다.
     if mask in visited[idx]:
         return
     visited[idx].add(mask)
@@ -31,6 +33,7 @@ def dfs(x, y, mask, depth):
         ny = y + dy[i]
 
         if 0 <= nx < R and 0 <= ny < C:
+            # 알파벳 하나를 비트 하나로 표현해 사용 여부를 빠르게 확인한다.
             bit = 1 << (ord(board[nx][ny]) - 65)
 
             if mask & bit:

@@ -1,5 +1,7 @@
 from collections import deque
 
+# BFS를 문제 유형별로 빠르게 꺼내 쓰기 위한 템플릿 모음
+
 # 그래프 BFS - 기본
 # 최단 거리, 레벨 탐색, 가장 먼저 도착하는 문제, 네트워크 / 변환 / 이동 횟수 문제
 def bfs(graph, start, n):
@@ -10,11 +12,13 @@ def bfs(graph, start, n):
     while queue:
         now = queue.popleft()
 
+        # 현재 노드와 연결된 노드를 차례대로 확장한다.
         for next_v in graph[now]:
             if not visited[next_v]:
                 visited[next_v] = True
                 queue.append(next_v)
 
+        # 방문 가능 여부만 확인하는 기본형 예시라 visited를 바로 반환한다.
         return visited
 
 # 사용 예시
@@ -85,6 +89,7 @@ def bfs(start_x, start_y, maps):
     while queue:
         x, y = queue.popleft()
 
+        # 현재 칸에서 4방향으로 한 칸씩 움직이며 탐색한다.
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
@@ -138,6 +143,7 @@ def bfs_8dir(start_x, start_y, maps, visited):
     while queue:
         x, y, = queue.popleft()
 
+        # 대각선을 포함한 8방향 칸을 모두 확인한다.
         for i in range(8):
             nx = x + dy[i]
             ny = y + dy[i]
@@ -171,6 +177,7 @@ def solution(begin, target, words):
     while queue:
         now, count = queue.popleft()
 
+        # 목표 단어를 찾는 순간 현재까지의 변환 횟수를 반환한다.
         if now == target:
             return count
 
@@ -204,6 +211,7 @@ def bfs():
     while queue:
         x, y, state = queue.popleft()
 
+        # 좌표뿐 아니라 상태까지 함께 관리해야 같은 칸도 다시 방문할 수 있다.
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]
@@ -236,6 +244,7 @@ def solution(maps):
     while queue:
         x, y = queue.popleft()
 
+        # BFS이므로 먼저 도착한 경로가 곧 최단 거리다.
         for i in range(4):
             nx = x + dx[i]
             ny = y + dy[i]

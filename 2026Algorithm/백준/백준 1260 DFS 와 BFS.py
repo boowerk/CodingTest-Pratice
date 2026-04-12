@@ -1,6 +1,7 @@
 from collections import deque
 import sys
 
+# 같은 그래프를 DFS와 BFS로 각각 순회하는 기본 풀이
 input = sys.stdin.readline # 입력 속도 개선
 
 # n: 정점 개수, m: 간선 개수, v: 시작 정점

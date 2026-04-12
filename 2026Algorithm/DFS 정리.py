@@ -1,10 +1,13 @@
 from collections import deque
 
+# DFS를 상황별로 바로 재사용할 수 있게 정리한 예제 파일
+
 # 그래프 DFS - 재귀
 # 연결 요소 개수, 방문 가능한 노드 탐색, 경로 존재 여부, 네트워크 / 타겟 탐색류
 def dfs(graph, v, visited):
     visited[v] = True
 
+    # 현재 노드에서 갈 수 있는 다음 노드를 끝까지 내려가며 방문한다.
     for next_v in graph[v]:
         if not visited[next_v]:
             dfs(graph, next_v, visited)
@@ -38,6 +41,7 @@ def dfs_stack(graph, start, n):
     visited[start] = True
 
     while(stack):
+        # 스택은 가장 마지막에 넣은 노드부터 꺼내며 깊게 탐색한다.
         now = stack.pop()
 
         for next_v in graph[now]:
@@ -121,6 +125,7 @@ def count_components(n, graph):
 
     for i in range(1, n + 1):
         if not visited[i]:
+            # 아직 방문하지 않은 노드에서 DFS를 시작하면 새로운 컴포넌트다.
             dfs(graph, i, visited)
             count += 1
 
@@ -145,6 +150,7 @@ def solution(n, computers):
 
     for i in range(n):
         if not visited[i]:
+            # 연결된 컴퓨터 묶음을 하나 찾을 때마다 네트워크 개수를 늘린다.
             dfs(computers, visited, i)
             answer += 1
 
@@ -162,6 +168,7 @@ def dfs(depth, path, used, arr):
 
     for i in range(len(arr)):
         if not used[i]:
+            # 현재 원소를 선택하고 다음 깊이로 내려간 뒤, 복구하며 다른 경우를 본다.
             used[i] = True
             path.append(arr[i])
 

@@ -1,6 +1,7 @@
 import sys
 sys.setrecursionlimit(10**6)
 
+# DFS 탐색 순서와 low 값을 이용해 단절점을 찾는 풀이
 def find_articulation_points(n, graph):
     order = [0] * (n + 1)   # 방문 순서
     low = [0] * (n + 1)     # low 값
@@ -11,6 +12,7 @@ def find_articulation_points(n, graph):
 
     def dfs(node, parent, is_root):
         nonlocal cnt
+        # 처음 방문한 순서를 order와 low의 초기값으로 함께 기록한다.
         visited[node] = True
         order[node] = cnt
         low[node] = cnt
@@ -54,6 +56,7 @@ n, m = map(int, input().split())
 graph = [[] for _ in range(n + 1)]
 
 for _ in range(m):
+    # 무방향 그래프이므로 양쪽 인접 리스트에 모두 넣는다.
     a, b = map(int, input().split())
     graph[a].append(b)
     graph[b].append(a)

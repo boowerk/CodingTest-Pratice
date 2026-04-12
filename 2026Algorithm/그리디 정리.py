@@ -1,5 +1,7 @@
 from collections import deque
 
+# 자주 나오는 그리디 풀이 패턴을 예제와 함께 모아둔 파일
+
 # ---------------------------------------------------------
 # 1. 기본 그리디 구조
 # ---------------------------------------------------------
@@ -15,6 +17,7 @@ def greedy_basic(arr, limit):
     count = 0
 
     for x in arr:
+        # 지금 선택해도 제한을 넘지 않으면 바로 채택한다.
         if current + x <= limit:
             current += x
             count += 1
@@ -37,6 +40,7 @@ def coin_change(n, coins):
     count = 0
 
     for coin in coins:
+        # 큰 단위 동전부터 최대한 많이 사용한다.
         count += n // coin
         n %= coin
 
@@ -58,6 +62,7 @@ def meeting_schedule(meetings):
     count = 0
 
     for start, end in meetings:
+        # 현재 회의가 직전 회의 종료 시간 이후라면 선택 가능하다.
         if start >= end_time:
             count += 1
             end_time = end

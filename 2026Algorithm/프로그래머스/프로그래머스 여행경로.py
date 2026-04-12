@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+# 티켓을 하나씩 소모하며 사전순으로 가장 앞서는 경로를 찾는 DFS 풀이
 def solution(tickets):
     graph = defaultdict(list)
 
@@ -38,5 +39,6 @@ def solution(tickets):
 
         return False
 
+    # 출발지는 항상 ICN으로 고정된다.
     dfs("ICN")
     return route

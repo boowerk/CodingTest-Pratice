@@ -1,6 +1,7 @@
 import sys
 input = sys.stdin.readline
 
+# 딕셔너리 형태의 트리를 만들어 세 가지 순회를 그대로 구현한 풀이
 n = int(input())
 
 tree = {}
@@ -41,4 +42,5 @@ print()
 inorder('A')
 print()
 
+# 후위 순회까지 출력해 세 순회 결과를 모두 보여 준다.
 postorder('A')

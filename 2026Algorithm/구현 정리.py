@@ -1,5 +1,7 @@
 from collections import deque, defaultdict, Counter
 
+# 구현 문제에서 자주 쓰는 보조 함수와 패턴을 모아둔 정리 파일
+
 # ---------------------------------------------------------
 # 1. 방향 배열
 # ---------------------------------------------------------
@@ -227,6 +229,7 @@ def solution(data):
     commands = "RRDDLU"
 
     for cmd in commands:
+        # 명령을 좌표 변화로 바꾼 뒤, 범위 안이면 실제 위치를 갱신한다.
         nx, ny = move_by_command(x, y, cmd)
 
         # 범위 안일 때만 이동
